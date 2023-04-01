@@ -60,7 +60,7 @@ th {
     <script>
       // Update the temperature and distance values from the server every 5 seconds
       setInterval(() => {
-        fetch('/data')
+        fetch('http://192.168.1.10/data')
           .then(response => response.json())
           .then(data => {
             document.querySelector('#temperature').textContent = data.temperature;
