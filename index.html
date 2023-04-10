@@ -1,93 +1,40 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Temperature and Distance Monitor</title>
-    <style>
-        body {
-  font-family: Arial, sans-serif;
-  background-color: #f2f2f2;
-}
+<head>
+  <title>ThingSpeak Data Display</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+  <h1>ThingSpeak Data</h1>
+  <div id="data-container"></div>
 
-.container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-  background-color: #fff;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-}
+  <script>
+    // Replace with your ThingSpeak Channel ID and API Key
+    const channelId = 'your_channel_id';
+    const apiKey = 'your_api_key';
 
-h1 {
-  text-align: center;
-  color: #333;
-  margin-top: 0;
-}
-
-table {
-  border-collapse: collapse;
-  margin: 20px auto;
-  width: 100%;
-}
-
-th, td {
-  border: 1px solid #ddd;
-  padding: 8px;
-  text-align: center;
-}
-
-th {
-  background-color: #f2f2f2;
-}
-
-.temperature {
-  color: red;
-  font-weight: bold;
-}
-
-.distance {
-  color: blue;
-  font-weight: bold;
-}
-
-    </style>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  </head>
-  <body>
-    <h1>Temperature and Distance Monitor</h1>
-    <p>Current temperature: <span id="temperature"></span>°C</p>
-    <p>Current distance: <span id="distance"></span>cm</p>
-    
-    <script>
-      // Update the temperature and distance values from the server every 5 seconds
-      setInterval(() => {
-        fetch('http://192.168.1.10/data')
-          .then(response => response.json())
-          .then(data => {
-            document.querySelector('#temperature').textContent = data.temperature;
-            document.querySelector('#distance').textContent = data.distance;
-          })
-          .catch(error => console.error(error));
-      }, 5000);
-    </script>
-    
-    <script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-app.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
-
-  // Your web app's Firebase configuration
-  const firebaseConfig = {
-    apiKey: "AIzaSyDtrb_fxxlcdWq8Nxo_g6Bputq6H7BcPig",
-    authDomain: "smart-fish-tank-cd41a.firebaseapp.com",
-    projectId: "smart-fish-tank-cd41a",
-    storageBucket: "smart-fish-tank-cd41a.appspot.com",
-    messagingSenderId: "805852169127",
-    appId: "1:805852169127:web:86ef83cec7805e66a86c82"
-  };
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-</script>
-  </body>
+    // Fetch data from ThingSpeak
+    $.getJSON(`https://api.thingspeak.com/channels/${2100158}/feeds.json?api_key=${B0845J9JE5NIP27O}&results=10`, function(data) {
+      // Process the fetched data
+      if (data && data.feeds) {
+        const feeds = data.feeds;
+        let html = '<table>';
+        html += '<tr><th>Timestamp</th><th>Temperature</th><th>Humidity</th><th>Distance</th></tr>';
+        for (let i = 0; i < feeds.length; i++) {
+          const feed = feeds[i];
+          const timestamp = feed.created_at;
+          const temperature = feed.field1;
+          const humidity = feed.field2;
+          const level = feed.field3;
+          // Add the data to the HTML container
+          html += `<tr><td>${timestamp}</td><td>${temperature}</td><td>${humidity}</td><td>${distance}</td></tr>`;
+        }
+        html += '</table>';
+        $('#data-container').html(html);
+      } else {
+        $('#data-container').html('<p>No data available.</p>');
+      }
+    });
+  </script>
+</body>
 </html>
