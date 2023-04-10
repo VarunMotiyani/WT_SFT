@@ -27,7 +27,7 @@
           const humidity = feed.field2;
           const level = feed.field3;
           // Add the data to the HTML container
-          html += `<tr><td>${timestamp}</td><td>${temperature}</td><td>${humidity}</td><td>${distance}</td></tr>`;
+          html += `<tr><td>${timestamp}</td><td>${temperature}</td><td>${humidity}</td><td>${level}</td></tr>`;
         }
         html += '</table>';
         $('#data-container').html(html);
